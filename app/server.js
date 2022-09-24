@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
+const { AllRoutes } = require("./router/router");
 
 module.exports = class Application {
   #app = express();
@@ -35,7 +36,9 @@ module.exports = class Application {
       return console.log("faild on connecting to MongoDB");
     });
   }
-  createRoutes() {}
+  createRoutes() {
+    this.#app.use(AllRoutes);
+  }
 
   errorHandling() {
     this.#app.use((req, res, next) => {
