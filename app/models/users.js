@@ -3,8 +3,8 @@ const { default: mongoose } = require("mongoose");
 const Schema = new mongoose.Schema({
   first_name: { type: String },
   last_name: { type: String },
-  username: { type: String, required: true, lowercase: true },
-  phone: { type: String },
+  username: { type: String, lowercase: true },
+  mobile: { type: String, required: true },
   email: { type: String, lowercase: true },
   discount: { type: Number, default: 0 },
   birth_day: { type: String },
@@ -14,8 +14,8 @@ const Schema = new mongoose.Schema({
   otp: {
     type: Object,
     default: {
-      code: "",
-      expires: 0,
+      code: 0,
+      expiresIn: 0,
     },
   },
 });

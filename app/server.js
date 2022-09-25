@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
 const morgan = require("morgan");
+const swaggerUI = require("swagger-ui-express");
+const swaggerJSDoc = require("swagger-jsdoc");
 const createError = require("http-errors");
 
 const { AllRoutes } = require("./router/router");
@@ -25,6 +27,23 @@ module.exports = class Application {
     this.#app.use(express.json());
     this.#app.use(express.urlencoded({ extended: true }));
     this.#app.use(express.static(path.join(__dirname, "..", "public")));
+    this.#app.use(
+      "/api-doc",
+      swaggerUI.serve,
+      swaggerUI.setup(
+        swaggerJSDoc({
+          swaggerDefinition: {
+            info: {
+              title: "Store Node JS",
+              version: "2.0.0",
+              description: "فروشگاه خوشگل",
+            },
+            servers: [{ url: "http://localhost:3030" }],
+          },
+          apis: ["./app/router/*/*.js"],
+        })
+      )
+    );
   }
 
   createServer() {
