@@ -1,6 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
+const morgan = require("morgan");
+const createError = require("http-errors");
+
 const { AllRoutes } = require("./router/router");
 
 module.exports = class Application {
@@ -18,6 +21,7 @@ module.exports = class Application {
   }
 
   configApplication() {
+    this.#app.use(morgan("dev"));
     this.#app.use(express.json());
     this.#app.use(express.urlencoded({ extended: true }));
     this.#app.use(express.static(path.join(__dirname, "..", "public")));
@@ -33,7 +37,21 @@ module.exports = class Application {
   connectToMongoDB() {
     mongoose.connect(this.#DB_URI, (err) => {
       if (!err) return console.log(`MongoDB connected to 0.0.0.0`);
-      return console.log("faild on connecting to MongoDB");
+      return console.log(err.message);
+    });
+
+    mongoose.connection.on("connected", () => {
+      console.log("mongoose connected to Db");
+    });
+
+    mongoose.connection.on("disconnected", () => {
+      console.log("mongoose disconnected to Db");
+    });
+
+    process.on("SIGINT", async () => {
+      await mongoose.connection.close();
+      console.log("disconnected");
+      process.exit(0);
     });
   }
   createRoutes() {
@@ -42,19 +60,19 @@ module.exports = class Application {
 
   errorHandling() {
     this.#app.use((req, res, next) => {
-      return res.status(404).json({
-        statusCode: 404,
-        message: "آدرس مورد نظر یافت نشد",
-      });
+      next(createError.NotFound("آدرس مورد نظر یافت نشد"));
     });
 
     this.#app.use((err, req, res, next) => {
-      const statusCode = err.status || 500;
-      const message = err.message || "Intrernal Server Error";
+      const serverError = createError.InternalServerError();
+      const statusCode = err.status || serverError.status;
+      const message = err.message || serverError.message;
 
       return res.status(statusCode).json({
-        statusCode,
-        message,
+        errors: {
+          statusCode,
+          message,
+        },
       });
     });
   }
