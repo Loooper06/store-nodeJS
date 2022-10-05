@@ -11,7 +11,7 @@ const {
 } = require("../../../validators/user/authSchema");
 const { UserModel } = require("../../../../models/users");
 const Controller = require("../../controller");
-const { EXPIRES_IN, USER_ROLE } = require("../../../../utils/constans");
+const { ROLES } = require("../../../../utils/constans");
 
 class UserAuthController extends Controller {
   async getOtp(req, res, next) {
@@ -43,8 +43,8 @@ class UserAuthController extends Controller {
       if (user.otp.code != code)
         throw createHttpError.Unauthorized("کد ارسال شده صحیح نمی باشد");
 
-      const now = new Date();
-      if (+user.otp.expiresIn < now)
+      const now = new Date().getTime();
+      if (user.otp.expiresIn < now)
         throw createHttpError.Unauthorized("کد شما منقضی شده است");
 
       const accessToken = await SignAccessToken(user._id);
@@ -82,9 +82,11 @@ class UserAuthController extends Controller {
   }
 
   async saveUser(mobile, code) {
+    const now = new Date().getTime();
+
     let otp = {
       code,
-      expiresIn: (new Date().getDate() + 120000),
+      expiresIn: now + 120000,
     };
 
     const result = await this.checkExistUser(mobile);
@@ -95,7 +97,7 @@ class UserAuthController extends Controller {
     return !!(await UserModel.create({
       mobile,
       otp,
-      Roles: [USER_ROLE],
+      Roles: [ROLES.USER],
     }));
   }
 

@@ -34,19 +34,18 @@ function SignAccessToken(userID) {
 function SignRefreshToken(userID) {
   return new Promise(async (resolve, reject) => {
     const user = await UserModel.findOne({ _id: userID });
-    console.log(userID);
 
     const payload = {
       mobile: user.mobile,
     };
     const options = {
-      expiresIn: "1y",
+      expiresIn: "1d",
     };
     const secret = REFRESH_TOKEN_SECRET_KEY;
 
     jwt.sign(payload, secret, options, async (err, token) => {
       if (err) reject(createHttpError.InternalServerError("خطای سرور"));
-      await redisClient.setEx(userID, 365 * 24 * 60 * 60, token);
+      await redisClient.setEx(String(userID), 365 * 24 * 60 * 60, token);
       resolve(token);
     });
   });
@@ -66,7 +65,7 @@ function VerifyRefreshToken(token) {
           { password: 0, otp: 0 }
         );
         if (!user) reject(createHttpError.NotFound("حساب کاربری یافت نشد"));
-        const refreshToken = await redisClient.get(user._id);
+        const refreshToken = await redisClient.get(String(user._id));
         if (token === refreshToken) return resolve(mobile);
         reject(
           createHttpError.Unauthorized("ورود مجدد به حساب کاربری انجام نشد")
