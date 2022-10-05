@@ -1,14 +1,22 @@
 const createHttpError = require("http-errors");
-const { numberRandomGen } = require("../../../../utils/functions");
-const { authSchema } = require("../../../validators/user/authSchema");
+const {
+  numberRandomGen,
+  SignAccessToken,
+  VerifyRefreshToken,
+  SignRefreshToken,
+} = require("../../../../utils/functions");
+const {
+  getOtpSchema,
+  checkOtpSchema,
+} = require("../../../validators/user/authSchema");
 const { UserModel } = require("../../../../models/users");
 const Controller = require("../../controller");
 const { EXPIRES_IN, USER_ROLE } = require("../../../../utils/constans");
 
 class UserAuthController extends Controller {
-  async login(req, res, next) {
+  async getOtp(req, res, next) {
     try {
-      await authSchema.validateAsync(req.body);
+      await getOtpSchema.validateAsync(req.body);
       const { mobile } = req.body;
       const code = numberRandomGen();
       const result = await this.saveUser(mobile, code);
@@ -26,10 +34,57 @@ class UserAuthController extends Controller {
     }
   }
 
+  async checkOtp(req, res, next) {
+    try {
+      await checkOtpSchema.validateAsync(req.body);
+      const { mobile, code } = req.body;
+      const user = await UserModel.findOne({ mobile });
+      if (!user) throw createHttpError.NotFound("کاربری یافت نشد");
+      if (user.otp.code != code)
+        throw createHttpError.Unauthorized("کد ارسال شده صحیح نمی باشد");
+
+      const now = new Date();
+      if (+user.otp.expiresIn < now)
+        throw createHttpError.Unauthorized("کد شما منقضی شده است");
+
+      const accessToken = await SignAccessToken(user._id);
+      const refreshToken = await SignRefreshToken(user._id);
+
+      return res.status(200).json({
+        data: {
+          accessToken,
+          refreshToken,
+        },
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async refreshToken(req, res, next) {
+    try {
+      const { refreshToken } = req.body;
+      const mobile = await VerifyRefreshToken(refreshToken);
+
+      const user = await UserModel.findOne({ mobile });
+      const accessToken = await SignAccessToken(user._id);
+      const newRefreshToken = await SignRefreshToken(user._id);
+
+      return res.json({
+        data: {
+          accessToken,
+          refreshToken: newRefreshToken,
+        },
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
   async saveUser(mobile, code) {
     let otp = {
       code,
-      expiresIn: EXPIRES_IN,
+      expiresIn: (new Date().getDate() + 120000),
     };
 
     const result = await this.checkExistUser(mobile);
