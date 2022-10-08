@@ -20,9 +20,21 @@ router.get("/children/:parent", CategoryController.getChildOfParents);
 //? GET /admin/category/all
 router.get("/all", CategoryController.getAllCategory);
 
+//? desc get all category list without nested structure
+//? GET /admin/category/list-of-all
+router.get("/list-of-all", CategoryController.getAllCategoryWithoutPopulate);
+
+//? desc get category list By id
+//? GET /admin/category/:id
+router.get("/:id", CategoryController.getCategoryByID);
+
 //? desc remove category
 //? DELETE /admin/category/delete/:id
 router.delete("/delete/:id", CategoryController.removeCategory);
+
+//? desc edit category
+//? DELETE /admin/category/edit/:id
+router.patch("/edit/:id", CategoryController.editCategory);
 
 module.exports = {
   CategoryRoutes: router,
