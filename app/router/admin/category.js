@@ -34,7 +34,7 @@ router.delete("/delete/:id", CategoryController.removeCategory);
 
 //? desc edit category
 //? DELETE /admin/category/edit/:id
-router.patch("/edit/:id", CategoryController.editCategory);
+router.patch  ("/edit/:id", CategoryController.editCategory);
 
 module.exports = {
   CategoryRoutes: router,
