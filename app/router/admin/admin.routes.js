@@ -1,3 +1,4 @@
+const { BlogAdminApiRoutes } = require("./blog");
 const { CategoryRoutes } = require("./category");
 const router = require("express").Router();
 
@@ -9,6 +10,7 @@ const router = require("express").Router();
  */
 
 router.use("/category", CategoryRoutes);
+router.use("/blogs", BlogAdminApiRoutes);
 
 module.exports = {
   AdminRoutes: router,
