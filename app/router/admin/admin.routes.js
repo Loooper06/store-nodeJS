@@ -1,5 +1,9 @@
+const {
+  VerifyAccessToken,
+} = require("../../http/middlewares/verifyAccessToken");
 const { BlogAdminApiRoutes } = require("./blog");
-const { CategoryRoutes } = require("./category");
+const { CategoryAdminApiRoutes } = require("./category");
+const { ProductAdminApiRoutes } = require("./product");
 const router = require("express").Router();
 
 /**
@@ -9,8 +13,9 @@ const router = require("express").Router();
  *      description : actions of admin (add / edit / remove)
  */
 
-router.use("/category", CategoryRoutes);
+router.use("/category", CategoryAdminApiRoutes);
 router.use("/blogs", BlogAdminApiRoutes);
+router.use("/products", ProductAdminApiRoutes);
 
 module.exports = {
   AdminRoutes: router,

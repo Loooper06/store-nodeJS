@@ -2,7 +2,7 @@ const Joi = require("@hapi/joi");
 const createHttpError = require("http-errors");
 const { MONGO_ID_PATTERN } = require("../../../utils/constans");
 
-const createBlogSchema = Joi.object({
+const createProductSchema = Joi.object({
   title: Joi.string()
     .min(3)
     .max(30)
@@ -28,13 +28,6 @@ const createBlogSchema = Joi.object({
   fileUploadPath: Joi.allow(),
 });
 
-// const updateCategorySchema = Joi.object({
-//   title: Joi.string()
-//     .min(3)
-//     .max(30)
-//     .error(createHttpError.BadRequest("عنوان بلاگ صحیح نمی باشد")),
-// });
-
 module.exports = {
-  createBlogSchema,
+  createProductSchema,
 };

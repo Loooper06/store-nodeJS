@@ -2,10 +2,12 @@ const createHttpError = require("http-errors");
 const jwt = require("jsonwebtoken");
 const { UserModel } = require("../models/users");
 const redisClient = require("./init_redis");
+const fs = require("fs");
 const {
   ACCESS_TOKEN_SECRET_KEY,
   REFRESH_TOKEN_SECRET_KEY,
 } = require("./constans");
+const path = require("path");
 
 function numberRandomGen() {
   return Math.floor(Math.random() * 90000 + 10000);
@@ -14,7 +16,6 @@ function numberRandomGen() {
 function SignAccessToken(userID) {
   return new Promise(async (resolve, reject) => {
     const user = await UserModel.findOne({ _id: userID });
-    console.log(userID);
 
     const payload = {
       mobile: user.mobile,
@@ -77,9 +78,16 @@ function VerifyRefreshToken(token) {
   }
 }
 
+function deleteFileInPublic(fileAddress) {
+  const pathFile = path.join(__dirname, "..", "..", "public", fileAddress);
+
+  fs.unlinkSync(pathFile);
+}
+
 module.exports = {
   numberRandomGen,
   SignAccessToken,
   SignRefreshToken,
   VerifyRefreshToken,
+  deleteFileInPublic,
 };

@@ -8,7 +8,6 @@ const createError = require("http-errors");
 const cors = require("cors");
 
 const { AllRoutes } = require("./router/router");
-const { setHeaders } = require("./http/middlewares/headers");
 
 module.exports = class Application {
   #app = express();
@@ -31,7 +30,6 @@ module.exports = class Application {
     this.#app.use(express.json());
     this.#app.use(express.urlencoded({ extended: true }));
     this.#app.use(express.static(path.join(__dirname, "..", "public")));
-    this.#app.use(setHeaders);
     this.#app.use(
       "/api-doc",
       swaggerUI.serve,
