@@ -16,10 +16,9 @@ const Schema = new mongoose.Schema({
   discount: { type: Number, default: 0 },
   count: { type: Number },
   type: { type: String, required: true }, //! virtual - physici
-  supplier: { type: mongoose.Types.ObjectId, required: true },
-  feture: {
+  supplier: { type: mongoose.Types.ObjectId, ref: "user", required: true },
+  features: {
     type: Object,
-    required: true,
     default: {
       length: "",
       height: "",

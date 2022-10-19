@@ -10,7 +10,7 @@ const router = require("express").Router();
 //? POST /admin/products/add
 router.post(
   "/add",
-  uploadFile.single("image"),
+  uploadFile.array("images", 10),
   stringToArray("tags"),
   ProductController.addProduct
 );
@@ -25,7 +25,7 @@ router.delete("/:id", ProductController.removeProduct);
 
 //? desc get all products
 //? GET /admin/products/
-router.get("/", ProductController.getAllProducts);
+router.get("/all", ProductController.getAllProducts);
 
 //? desc get a product by blog's ID
 //? GET /admin/products/:id
