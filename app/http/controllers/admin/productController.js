@@ -3,12 +3,15 @@ const path = require("path");
 const {
   deleteFileInPublic,
   listOfImagesFromRequest,
+  copyObject,
+  setFeatures,
 } = require("../../../utils/functions");
 const { createProductSchema } = require("../../validators/admin/productSchema");
 const { ProductModel } = require("../../../models/products");
 const Controller = require("../controller");
 const { ObjectValidator } = require("../../validators/public.validator");
 const createHttpError = require("http-errors");
+const { StatusCodes: httpStatus } = require("http-status-codes");
 
 class ProductController extends Controller {
   async addProduct(req, res, next) {
@@ -31,39 +34,12 @@ class ProductController extends Controller {
         price,
         discount,
         type,
-        width,
-        height,
-        length,
-        weight,
-        // colors,
-        // madein,
-        // model,
       } = productDateBody;
 
-      let features = {};
+      let features = setFeatures(req.body);
 
-      // features.colors = colors;
-      // features.madein = madein;
-      // features.model = model;
-
-      if (
-        !isNaN(+width) ||
-        !isNaN(+height) ||
-        !isNaN(+length) ||
-        !isNaN(+weight)
-      ) {
-        if (!width) features.width = 0;
-        else features.width = +width;
-        if (!height) features.height = 0;
-        else features.height = +height;
-        if (!length) features.length = 0;
-        else features.length = +length;
-        if (!weight) features.weight = 0;
-        else features.weight = +weight;
-      }
-
-      if (type === "فیزیکی") type = "physical";
-      else if (type === "مجازی") type = "virtual";
+      if (type === "فیزیکی" || type === "physical") type = "physical";
+      else if (type === "مجازی" || type === "virtual") type = "virtual";
 
       await ProductModel.create({
         title,
@@ -80,8 +56,8 @@ class ProductController extends Controller {
         features,
       });
 
-      return res.status(200).json({
-        statusCode: 201,
+      return res.status(httpStatus.CREATED).json({
+        statusCode: httpStatus.CREATED,
         data: {
           message: "ثبت محصول با موفقیت انجام شد",
         },
@@ -94,6 +70,60 @@ class ProductController extends Controller {
 
   async editProduct(req, res, next) {
     try {
+      const { id } = req.params;
+      const product = await this.findProductByID(id);
+
+      const data = copyObject(req.body);
+
+      data.images = listOfImagesFromRequest(
+        req?.files || [],
+        req.body.fileUploadPath
+      );
+
+      data.features = setFeatures(req.body);
+      let nullishData = ["", " ", "0", 0, null, undefined];
+      let blackListFields = [
+        "bookmarks",
+        "deslikes",
+        "comments",
+        "likes",
+        "supplier",
+        "width",
+        "colors",
+        "length",
+        "height",
+        "weight",
+        "models",
+        "madein",
+      ];
+
+      Object.keys(data).forEach((key) => {
+        if (blackListFields.includes(key)) delete data[key];
+        if (typeof data[key] == "string") data[key] = data[key].trim();
+        if (Array.isArray(data[key]) && data[key].length > 0)
+          data[key] = data[key].map((item) => item.trim());
+        if (Array.isArray(data[key]) && data[key].length == 0) delete data[key];
+        if (nullishData.includes(data[key])) delete data[key];
+      });
+
+      const updateProductResult = await ProductModel.updateOne(
+        {
+          _id: product._id,
+        },
+        {
+          $set: data,
+        }
+      );
+
+      if (updateProductResult.modifiedCount == 0)
+        throw createHttpError.InternalServerError("خطای سرور");
+
+      return res.status(httpStatus.OK).json({
+        statusCode: httpStatus.OK,
+        data: {
+          message: "بروزرسانی محصول با موفقیت انجام شد",
+        },
+      });
     } catch (err) {
       next(err);
     }
@@ -108,8 +138,8 @@ class ProductController extends Controller {
       if (deleteResult.deletedCount == 0)
         throw createHttpError.InternalServerError("حذف با خطا مواجه شد");
 
-      return res.status(200).json({
-        statusCode: 200,
+      return res.status(httpStatus.OK).json({
+        statusCode: httpStatus.OK,
         data: {
           message: "حذف محصول با موفقیت انجام شد",
         },
@@ -121,7 +151,18 @@ class ProductController extends Controller {
 
   async getAllProducts(req, res, next) {
     try {
-      const products = await ProductModel.find({});
+      const search = req?.query?.search || "";
+
+      let products;
+      if (search) {
+        products = await ProductModel.find({
+          $text: {
+            $search: search,
+          },
+        });
+      } else {
+        products = await ProductModel.find({});
+      }
 
       products.map((pr) => {
         switch (pr.type) {
@@ -135,8 +176,8 @@ class ProductController extends Controller {
         }
       });
 
-      return res.status(200).json({
-        statusCode: 200,
+      return res.status(httpStatus.OK).json({
+        statusCode: httpStatus.OK,
         data: {
           products,
         },
@@ -151,8 +192,8 @@ class ProductController extends Controller {
       const { id } = req.params;
 
       const product = await this.findProductByID(id);
-      return res.status(200).json({
-        statusCode: 200,
+      return res.status(httpStatus.OK).json({
+        statusCode: httpStatus.OK,
         data: {
           product,
         },

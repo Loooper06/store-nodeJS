@@ -94,6 +94,31 @@ function listOfImagesFromRequest(files, fileUploadPath) {
   }
 }
 
+function copyObject(object) {
+  return JSON.parse(JSON.stringify(object));
+}
+
+function setFeatures(body) {
+  const { colors, models, madein, length, weight, width, height } = body;
+  let features;
+  features.colors = colors;
+  features.models = models;
+  features.madein = madein;
+
+  if (!isNaN(+width) || !isNaN(+height) || !isNaN(+length) || !isNaN(+weight)) {
+    if (!width) features.width = 0;
+    else features.width = +width;
+    if (!height) features.height = 0;
+    else features.height = +height;
+    if (!length) features.length = 0;
+    else features.length = +length;
+    if (!weight) features.weight = 0;
+    else features.weight = +weight;
+  }
+
+  return features;
+}
+
 module.exports = {
   numberRandomGen,
   SignAccessToken,
@@ -101,4 +126,6 @@ module.exports = {
   VerifyRefreshToken,
   deleteFileInPublic,
   listOfImagesFromRequest,
+  copyObject,
+  setFeatures,
 };

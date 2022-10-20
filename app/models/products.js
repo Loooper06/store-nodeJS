@@ -1,7 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const { CommentSchema } = require("./public.schema");
 
-const Schema = new mongoose.Schema({
+const productSchema = new mongoose.Schema({
   title: { type: String, required: true },
   text: { type: String, required: true },
   short_text: { type: String, required: true },
@@ -31,6 +31,8 @@ const Schema = new mongoose.Schema({
   },
 });
 
+productSchema.index({ title: "text", short_text: "text", text: "text" });
+
 module.exports = {
-  ProductModel: mongoose.model("product", Schema),
+  ProductModel: mongoose.model("product", productSchema),
 };

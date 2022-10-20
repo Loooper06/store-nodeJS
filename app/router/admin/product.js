@@ -11,13 +11,18 @@ const router = require("express").Router();
 router.post(
   "/add",
   uploadFile.array("images", 10),
-  stringToArray("tags"),
+  stringToArray("tags", "colors", "models"),
   ProductController.addProduct
 );
 
 //? desc update products
 //? PATCH /admin/products/:id
-router.patch("/update/:id", ProductController.editProduct);
+router.patch(
+  "/update/:id",
+  uploadFile.array("images", 10),
+  stringToArray("tags", "colors", "models"),
+  ProductController.editProduct
+);
 
 //? desc remove product
 //? DELETE /admin/products/:id

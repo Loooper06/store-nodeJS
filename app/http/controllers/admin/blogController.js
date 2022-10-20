@@ -4,6 +4,7 @@ const { BlogModel } = require("../../../models/blogs");
 const Controller = require("../controller");
 const { deleteFileInPublic } = require("../../../utils/functions");
 const createError = require("http-errors");
+const { StatusCodes: httpStatus } = require("http-status-codes");
 
 class BlogController extends Controller {
   async createBlog(req, res, next) {
@@ -26,8 +27,8 @@ class BlogController extends Controller {
         tags,
         author,
       });
-      return res.status(201).json({
-        statusCode: 201,
+      return res.status(httpStatus.CREATED).json({
+        statusCode: httpStatus.CREATED,
         data: {
           message: "ایجاد بلاگ با موفقیت انجام شد",
         },
@@ -42,8 +43,8 @@ class BlogController extends Controller {
     try {
       const { id } = req.params;
       const blog = await this.findBlog(id);
-      return res.status(200).json({
-        statusCode: 200,
+      return res.status(httpStatus.OK).json({
+        statusCode: httpStatus.OK,
         data: {
           blog,
         },
@@ -90,8 +91,8 @@ class BlogController extends Controller {
           },
         },
       ]);
-      return res.status(200).json({
-        statusCode: 200,
+      return res.status(httpStatus.OK).json({
+        statusCode: httpStatus.OK,
         data: {
           blogs,
         },
@@ -115,8 +116,8 @@ class BlogController extends Controller {
       const result = await BlogModel.deleteOne({ _id: id });
       if (result.deletedCount == 0)
         throw createError.InternalServerError("حذف انجام نشد");
-      return res.status(200).json({
-        statusCode: 200,
+      return res.status(httpStatus.OK).json({
+        statusCode: httpStatus.OK,
         data: {
           message: "حذف مقاله با موفقیت انجام شد",
         },
@@ -157,8 +158,8 @@ class BlogController extends Controller {
       if (updateResult.modifiedCount == 0)
         throw createError.InternalServerError("به روز رسانی انجام نشد");
 
-      return res.status(200).json({
-        statusCode: 200,
+      return res.status(httpStatus.OK).json({
+        statusCode: httpStatus.OK,
         data: {
           message: "به روز رسانی بلاگ با موفقیت انجام شد",
         },
