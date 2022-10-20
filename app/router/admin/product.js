@@ -17,11 +17,11 @@ router.post(
 
 //? desc update products
 //? PATCH /admin/products/:id
-router.patch("/:id", ProductController.editProduct);
+router.patch("/update/:id", ProductController.editProduct);
 
 //? desc remove product
 //? DELETE /admin/products/:id
-router.delete("/:id", ProductController.removeProduct);
+router.delete("/delete/:id", ProductController.removeProduct);
 
 //? desc get all products
 //? GET /admin/products/
@@ -29,7 +29,7 @@ router.get("/all", ProductController.getAllProducts);
 
 //? desc get a product by blog's ID
 //? GET /admin/products/:id
-router.get("/", ProductController.getOneProduct);
+router.get("/:id", ProductController.getOneProduct);
 
 module.exports = {
   ProductAdminApiRoutes: router,

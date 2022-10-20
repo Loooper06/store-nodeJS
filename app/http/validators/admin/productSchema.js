@@ -25,11 +25,26 @@ const createProductSchema = Joi.object({
   price: Joi.number().error(
     createHttpError.BadRequest("قیمت ارسال شده صحیح نمی باشد")
   ),
-  discount: Joi.number().allow().error(
-    createHttpError.BadRequest("تخفیف ارسال شده صحیح نمی باشد")
+  discount: Joi.number()
+    .allow()
+    .error(createHttpError.BadRequest("تخفیف ارسال شده صحیح نمی باشد")),
+  type: Joi.string().error(
+    createHttpError.BadRequest("نوع محصول ارسال شده صحیح نمی باشد")
   ),
   count: Joi.number().error(
     createHttpError.BadRequest("تعداد ارسال شده صحیح نمی باشد")
+  ),
+
+  colors: Joi.array().error(
+    createHttpError.BadRequest("رنگهای ارسال شده صحیح نمی باشد")
+  ),
+
+  madein: Joi.string().error(
+    createHttpError.BadRequest("محل ساخت صحیح نمی باشد")
+  ),
+
+  model: Joi.array().error(
+    createHttpError.BadRequest("مدل های ارسال شده صحیح نمی باشد")
   ),
 
   weight: Joi.number()
@@ -44,7 +59,7 @@ const createProductSchema = Joi.object({
   height: Joi.number()
     .allow(null, 0, "0")
     .error(createHttpError.BadRequest("ارتفاع ارسال شده صحیح نمی باشد")),
-    
+
   filename: Joi.string()
     .pattern(/(\.png|\.jpg|\.webp|\.jpeg|\.gif)$/)
     .error(createHttpError.BadRequest("تصویر ارسال شده صحیح نمی باشد")),
