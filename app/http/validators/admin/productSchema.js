@@ -43,7 +43,7 @@ const createProductSchema = Joi.object({
     createHttpError.BadRequest("محل ساخت صحیح نمی باشد")
   ),
 
-  model: Joi.array().error(
+  models: Joi.array().error(
     createHttpError.BadRequest("مدل های ارسال شده صحیح نمی باشد")
   ),
 

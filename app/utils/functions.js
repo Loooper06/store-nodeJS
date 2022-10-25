@@ -100,7 +100,8 @@ function copyObject(object) {
 
 function setFeatures(body) {
   const { colors, models, madein, length, weight, width, height } = body;
-  let features;
+  console.log(body);
+  let features = {};
   features.colors = colors;
   features.models = models;
   features.madein = madein;
@@ -119,6 +120,20 @@ function setFeatures(body) {
   return features;
 }
 
+function deleteInvalidPropertyObject(data = {}, blacklistFields = []) {
+  let nullishData = ["", " ", "0", 0, null, undefined];
+  let blackListFields = Object.values(ProductBlackList);
+
+  Object.keys(data).forEach((key) => {
+    if (blackListFields.includes(key)) delete data[key];
+    if (typeof data[key] == "string") data[key] = data[key].trim();
+    if (Array.isArray(data[key]) && data[key].length > 0)
+      data[key] = data[key].map((item) => item.trim());
+    if (Array.isArray(data[key]) && data[key].length == 0) delete data[key];
+    if (nullishData.includes(data[key])) delete data[key];
+  });
+}
+
 module.exports = {
   numberRandomGen,
   SignAccessToken,
@@ -128,4 +143,5 @@ module.exports = {
   listOfImagesFromRequest,
   copyObject,
   setFeatures,
+  deleteInvalidPropertyObject,
 };

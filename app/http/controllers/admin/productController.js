@@ -5,6 +5,7 @@ const {
   listOfImagesFromRequest,
   copyObject,
   setFeatures,
+  deleteInvalidPropertyObject,
 } = require("../../../utils/functions");
 const { createProductSchema } = require("../../validators/admin/productSchema");
 const { ProductModel } = require("../../../models/products");
@@ -12,6 +13,22 @@ const Controller = require("../controller");
 const { ObjectValidator } = require("../../validators/public.validator");
 const createHttpError = require("http-errors");
 const { StatusCodes: httpStatus } = require("http-status-codes");
+
+const ProductBlackList = {
+  BOOKMARKS: "bookmarks",
+  LINKS: "links",
+  DISLIKES: "disLikes",
+  COMMENTS: "comments",
+  SUPPLIER: "supplier",
+  WEIGHT: "weight",
+  LENGTH: "length",
+  HEIGTH: "height",
+  WIDTH: "width",
+  COLORS: "colors",
+  MODELS: "models",
+  MADEIN: "madein",
+};
+Object.freeze(ProductBlackList);
 
 class ProductController extends Controller {
   async addProduct(req, res, next) {
@@ -81,30 +98,8 @@ class ProductController extends Controller {
       );
 
       data.features = setFeatures(req.body);
-      let nullishData = ["", " ", "0", 0, null, undefined];
-      let blackListFields = [
-        "bookmarks",
-        "deslikes",
-        "comments",
-        "likes",
-        "supplier",
-        "width",
-        "colors",
-        "length",
-        "height",
-        "weight",
-        "models",
-        "madein",
-      ];
-
-      Object.keys(data).forEach((key) => {
-        if (blackListFields.includes(key)) delete data[key];
-        if (typeof data[key] == "string") data[key] = data[key].trim();
-        if (Array.isArray(data[key]) && data[key].length > 0)
-          data[key] = data[key].map((item) => item.trim());
-        if (Array.isArray(data[key]) && data[key].length == 0) delete data[key];
-        if (nullishData.includes(data[key])) delete data[key];
-      });
+      let blacklistFields = Object.values(ProductBlackList);
+      deleteInvalidPropertyObject(data, blacklistFields);
 
       const updateProductResult = await ProductModel.updateOne(
         {

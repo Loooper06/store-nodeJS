@@ -2,9 +2,22 @@ const path = require("path");
 const { createBlogSchema } = require("../../validators/admin/blogSchema");
 const { BlogModel } = require("../../../models/blogs");
 const Controller = require("../controller");
-const { deleteFileInPublic } = require("../../../utils/functions");
+const {
+  deleteFileInPublic,
+  deleteInvalidPropertyObject,
+  copyObject,
+} = require("../../../utils/functions");
 const createError = require("http-errors");
 const { StatusCodes: httpStatus } = require("http-status-codes");
+
+const BlogBlackList = {
+  BOOKMARKS: "bookmarks",
+  DISLIKES: "disLikes",
+  COMMENTS: "comments",
+  LIKES: "likes",
+  AUTHOR: "author",
+};
+Object.freeze(BlogBlackList);
 
 class BlogController extends Controller {
   async createBlog(req, res, next) {
@@ -135,22 +148,11 @@ class BlogController extends Controller {
         req.body.image = path.join(req.body.fileUploadPath, req.body.filename);
         req.body.image = req.body.image.replace(/\\/g, "/");
       }
-      const data = req.body;
-      let nullishData = ["", " ", "0", 0, null, undefined];
-      let blackListFields = [
-        "bookmarks",
-        "deslikes",
-        "comments",
-        "likes",
-        "author",
-      ];
-      Object.keys(data).forEach((key) => {
-        if (blackListFields.includes(key)) delete data[key];
-        if (typeof data[key] == "string") data[key] = data[key].trim();
-        if (Array.isArray(data[key]) && data[key].length > 0)
-          data[key] = data[key].map((item) => item.trim());
-        if (nullishData.includes(data[key])) delete data[key];
-      });
+
+      let data = copyObject(req.body);
+
+      let blackListFields = Object.values(BlogBlackList);
+      deleteInvalidPropertyObject(data, blackListFields);
       const updateResult = await BlogModel.updateOne(
         { _id: id },
         { $set: data }

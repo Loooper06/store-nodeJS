@@ -11,7 +11,7 @@ const router = require("express").Router();
 
 //? desc get all blogs list
 //? GET /admin/blogs/
-router.get("/", AdminBlogController.getListOfBlogs);
+router.get("/list", AdminBlogController.getListOfBlogs);
 
 //? desc get blog by id
 //? GET /admin/blogs/:id
