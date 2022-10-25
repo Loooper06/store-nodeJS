@@ -1,10 +1,13 @@
-const { CourseModel } = require("../../../models/courses");
-const Controller = require("../controller");
+const { CourseModel } = require("../../../../models/courses");
+const Controller = require("../../controller");
 const { StatusCodes: httpStatus } = require("http-status-codes");
 const path = require("path");
-const { createCourseSchema } = require("../../validators/admin/courseSchema");
+const {
+  createCourseSchema,
+} = require("../../../validators/admin/courseSchema");
 const createHttpError = require("http-errors");
-const { deleteFileInPublic } = require("../../../utils/functions");
+const { deleteFileInPublic } = require("../../../../utils/functions");
+const { default: mongoose } = require("mongoose");
 
 class CourseController extends Controller {
   async getAllCourses(req, res, next) {
@@ -32,10 +35,7 @@ class CourseController extends Controller {
   async getCourseByID(req, res, next) {
     try {
       const { id } = req.params;
-      const course = await CourseModel.findById(id);
-
-      if (!course) throw createHttpError.NotFound("دوره ای یافت نشد");
-
+      const course = await this.findCourseByID(id);
       return res.status(httpStatus.OK).json({
         statusCode: httpStatus.OK,
         data: {
@@ -107,13 +107,6 @@ class CourseController extends Controller {
     }
   }
 
-  async addNewChapter(req, res, next) {
-    try {
-    } catch (err) {
-      next(err);
-    }
-  }
-
   async addNewEpisode(req, res, next) {
     try {
     } catch (err) {
@@ -133,6 +126,15 @@ class CourseController extends Controller {
     } catch (err) {
       next(err);
     }
+  }
+
+  async findCourseByID(id) {
+    if (!mongoose.isValidObjectId(id))
+      throw createHttpError.BadRequest("شناسه ارسال شده صحیح نمی باشد");
+    const course = await CourseModel.findById(id);
+
+    if (!course) createHttpError.NotFound("دوره ای یافت نشد");
+    return course;
   }
 }
 

@@ -1,12 +1,12 @@
 const path = require("path");
-const { createBlogSchema } = require("../../validators/admin/blogSchema");
-const { BlogModel } = require("../../../models/blogs");
-const Controller = require("../controller");
+const { createBlogSchema } = require("../../../validators/admin/blogSchema");
+const { BlogModel } = require("../../../../models/blogs");
+const Controller = require("../../controller");
 const {
   deleteFileInPublic,
   deleteInvalidPropertyObject,
   copyObject,
-} = require("../../../utils/functions");
+} = require("../../../../utils/functions");
 const createError = require("http-errors");
 const { StatusCodes: httpStatus } = require("http-status-codes");
 

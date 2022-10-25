@@ -6,11 +6,11 @@ const {
   copyObject,
   setFeatures,
   deleteInvalidPropertyObject,
-} = require("../../../utils/functions");
-const { createProductSchema } = require("../../validators/admin/productSchema");
-const { ProductModel } = require("../../../models/products");
-const Controller = require("../controller");
-const { ObjectValidator } = require("../../validators/public.validator");
+} = require("../../../../utils/functions");
+const { createProductSchema } = require("../../../validators/admin/productSchema");
+const { ProductModel } = require("../../../../models/products");
+const Controller = require("../../controller");
+const { ObjectValidator } = require("../../../validators/public.validator");
 const createHttpError = require("http-errors");
 const { StatusCodes: httpStatus } = require("http-status-codes");
 

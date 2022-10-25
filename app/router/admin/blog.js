@@ -1,6 +1,6 @@
 const {
   AdminBlogController,
-} = require("../../http/controllers/admin/blogController");
+} = require("../../http/controllers/admin/blog/blogController");
 const { stringToArray } = require("../../http/middlewares/stringToArray");
 const {
   VerifyAccessToken,

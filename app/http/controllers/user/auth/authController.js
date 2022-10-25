@@ -23,8 +23,8 @@ class UserAuthController extends Controller {
       const result = await this.saveUser(mobile, code);
       if (!result) throw createHttpError.Unauthorized("ورود با شکست مواجه شد");
       return res.status(httpStatus.OK).send({
+        statusCode: httpStatus.OK,
         data: {
-          statusCode: httpStatus.OK,
           message: "کد اعتبار سنجی با موفقیت ارسال شد",
           code,
           mobile,
@@ -52,6 +52,7 @@ class UserAuthController extends Controller {
       const refreshToken = await SignRefreshToken(user._id);
 
       return res.status(httpStatus.OK).json({
+        statusCode: httpStatus.OK,
         data: {
           accessToken,
           refreshToken,
@@ -72,6 +73,7 @@ class UserAuthController extends Controller {
       const newRefreshToken = await SignRefreshToken(user._id);
 
       return res.status(httpStatus.OK).json({
+        statusCode: httpStatus.OK,
         data: {
           accessToken,
           refreshToken: newRefreshToken,

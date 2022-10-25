@@ -1,6 +1,6 @@
 const {
   CategoryController,
-} = require("../../http/controllers/admin/categoryController");
+} = require("../../http/controllers/admin/category/categoryController");
 
 const router = require("express").Router();
 

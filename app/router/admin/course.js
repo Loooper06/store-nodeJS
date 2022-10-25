@@ -1,6 +1,9 @@
 const {
+  ChapterController,
+} = require("../../http/controllers/admin/course/chapterController");
+const {
   CourseController,
-} = require("../../http/controllers/admin/courseController");
+} = require("../../http/controllers/admin/course/courseController");
 const { stringToArray } = require("../../http/middlewares/stringToArray");
 const { uploadFile } = require("../../utils/multer");
 
@@ -22,10 +25,6 @@ router.post(
   stringToArray("tags"),
   CourseController.addNewCourse
 ); //! create new course
-
-//? desc Create New Chapter
-//? POST /admin/courses/add-chapter
-// router.put(); //! create new chapter
 
 //? desc Add new Category
 //? POST /admin/category/add

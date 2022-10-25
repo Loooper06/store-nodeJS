@@ -1,6 +1,6 @@
 const {
   ProductController,
-} = require("../../http/controllers/admin/productController");
+} = require("../../http/controllers/admin/product/productController");
 const { stringToArray } = require("../../http/middlewares/stringToArray");
 const { uploadFile } = require("../../utils/multer");
 
