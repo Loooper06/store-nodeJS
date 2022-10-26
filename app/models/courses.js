@@ -24,8 +24,8 @@ const CourseSchema = new mongoose.Schema({
   category: { type: mongoose.Types.ObjectId, ref: "category", required: true },
   comments: { type: [CommentSchema], default: [] },
   likes: { type: [mongoose.Types.ObjectId], default: [] },
-  deslike: { type: [mongoose.Types.ObjectId], default: [] },
-  bookmark: { type: [mongoose.Types.ObjectId], default: [] },
+  dislikes: { type: [mongoose.Types.ObjectId], default: [] },
+  bookmarks: { type: [mongoose.Types.ObjectId], default: [] },
   status: { type: String, default: "notStarted" }, //! notStarted - Completed - Holding
   price: { type: Number, default: 0 },
   discount: { type: Number, default: 0 },
