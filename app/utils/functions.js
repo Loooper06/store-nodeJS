@@ -120,10 +120,8 @@ function setFeatures(body) {
   return features;
 }
 
-function deleteInvalidPropertyObject(data = {}, blacklistFields = []) {
+function deleteInvalidPropertyObject(data = {}, blackListFields = []) {
   let nullishData = ["", " ", "0", 0, null, undefined];
-  let blackListFields = Object.values(ProductBlackList);
-
   Object.keys(data).forEach((key) => {
     if (blackListFields.includes(key)) delete data[key];
     if (typeof data[key] == "string") data[key] = data[key].trim();
@@ -132,6 +130,25 @@ function deleteInvalidPropertyObject(data = {}, blacklistFields = []) {
     if (Array.isArray(data[key]) && data[key].length == 0) delete data[key];
     if (nullishData.includes(data[key])) delete data[key];
   });
+}
+
+function getTime(seconds) {
+  let total = Math.round(seconds) / 60;
+  let [minutes, percent] = String(total).split(".");
+  let second = Math.round((percent * 60) / 100)
+    .toString()
+    .substring(0, 2);
+  let hour = 0;
+  if (minutes > 60) {
+    total = minutes / 60;
+    let [h1, percent] = String(total).split(".");
+    hour = h1;
+    minutes = Math.round(percent / 60 / 100)
+      .toString()
+      .substring(0, 2);
+  }
+
+  return hour + ":" + minutes + ":" + second;
 }
 
 module.exports = {
@@ -144,4 +161,5 @@ module.exports = {
   copyObject,
   setFeatures,
   deleteInvalidPropertyObject,
+  getTime,
 };

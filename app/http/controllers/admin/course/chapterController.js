@@ -4,6 +4,7 @@ const Controller = require("../../controller");
 const { CourseController } = require("./courseController");
 const { StatusCodes: httpStatus } = require("http-status-codes");
 const createHttpError = require("http-errors");
+const { deleteInvalidPropertyObject } = require("../../../../utils/functions");
 
 class ChapterController extends Controller {
   async addNewChapter(req, res, next) {
@@ -63,6 +64,73 @@ class ChapterController extends Controller {
 
     if (!chapters) createHttpError.NotFound("دوره ای یافت نشد");
     return chapters;
+  }
+
+  async removeChapterByID(req, res, next) {
+    try {
+      const { chapterID } = req.params;
+      await this.getOneChapter(chapterID);
+      const removeChapteResult = await CourseModel.updateOne(
+        {
+          "chapters._id": chapterID,
+        },
+        {
+          $pull: {
+            chapters: {
+              _id: chapterID,
+            },
+          },
+        }
+      );
+
+      if (removeChapteResult.modifiedCount == 0)
+        throw createHttpError.InternalServerError(
+          "حذف فصل انجام نشد (خطای سرور)"
+        );
+
+      return res.status(httpStatus.OK).json({
+        statusCode: httpStatus.OK,
+        data: {
+          message: "حذف فصل با موفقیت انجام شد",
+        },
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async updateChapterByID(req, res, next) {
+    try {
+      const { chapterID } = req.params;
+      await this.getOneChapter(chapterID);
+
+      const data = req.body;
+      deleteInvalidPropertyObject(data, ["_id"]);
+      const updateResult = await CourseModel.updateOne(
+        {
+          "chapters._id": chapterID,
+        },
+        {
+          $set: {
+            "chapters.$": data,
+          },
+        }
+      );
+
+      if (updateResult.modifiedCount == 0)
+        throw createHttpError.InternalServerError(
+          "بروز رسانی فصل انجام نشد (خطای سرور)"
+        );
+
+      return res.status(httpStatus.OK).json({
+        statusCode: httpStatus.OK,
+        data: {
+          message: "بروز رسانی فصل با موفقیت انجام شد",
+        },
+      });
+    } catch (err) {
+      next(err);
+    }
   }
 
   async getOneChapter(id) {

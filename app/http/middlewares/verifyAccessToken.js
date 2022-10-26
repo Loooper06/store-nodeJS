@@ -16,12 +16,12 @@ function VerifyAccessToken(req, res, next) {
     const token = getToken(req.headers);
     jwt.verify(token, ACCESS_TOKEN_SECRET_KEY, async (err, payload) => {
       if (err)
-        throw createHttpError.Unauthorized("ابتدا وارد حساب کاربری خود شوید");
+        return next(
+          createHttpError.Unauthorized("ابتدا وارد حساب کاربری خود شوید")
+        );
 
       const { mobile } = payload || {};
       const user = await UserModel.findOne({ mobile }, { password: 0, otp: 0 });
-
-      console.log(user);
 
       if (!user) throw createHttpError.NotFound("حساب کاربری یافت نشد");
       req.user = user;
