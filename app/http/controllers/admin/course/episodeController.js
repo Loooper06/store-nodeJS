@@ -112,6 +112,7 @@ class EpisodeController extends Controller {
       const { episodeID } = req.params;
       const episode = await this.getOneEpisode(episodeID);
       const { filename, fileUploadPath } = req.body;
+
       let blackListFields = ["_id"];
       if (filename && fileUploadPath) {
         const fileAddress = path.join(fileUploadPath, filename);
@@ -125,12 +126,15 @@ class EpisodeController extends Controller {
         blackListFields.push("time");
         blackListFields.push("videoAddress");
       }
+
       const data = req.body;
       deleteInvalidPropertyObject(data, blackListFields);
+
       const newEpisode = {
         ...episode,
         ...data,
       };
+
       const editEpisodeResult = await CourseModel.updateOne(
         {
           "chapters.episodes._id": episodeID,
@@ -141,8 +145,10 @@ class EpisodeController extends Controller {
           },
         }
       );
+
       if (editEpisodeResult.modifiedCount == 0)
         throw new createHttpError.InternalServerError("ویرایش قسمت انجام نشد");
+        
       return res.status(httpStatus.OK).json({
         statusCode: httpStatus.OK,
         data: {

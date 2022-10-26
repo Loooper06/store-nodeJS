@@ -7,7 +7,9 @@ const {
   setFeatures,
   deleteInvalidPropertyObject,
 } = require("../../../../utils/functions");
-const { createProductSchema } = require("../../../validators/admin/productSchema");
+const {
+  createProductSchema,
+} = require("../../../validators/admin/productSchema");
 const { ProductModel } = require("../../../../models/products");
 const Controller = require("../../controller");
 const { ObjectValidator } = require("../../../validators/public.validator");

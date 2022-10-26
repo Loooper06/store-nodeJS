@@ -36,9 +36,9 @@ BlogSchema.virtual("category_detail", {
   foreignField: "category",
 });
 
-// BlogSchema.virtual("imageURL").get(function() {
-//   return `${process.env.Base_URL}:${process.env.}`
-// })
+BlogSchema.virtual("imageURL").get(function () {
+  return `${process.env.BASE_URL}:${process.env.APPLICATION_PORT}/${this.image}`;
+});
 
 module.exports = {
   BlogModel: mongoose.model("blog", BlogSchema),
