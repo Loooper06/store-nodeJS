@@ -13,7 +13,6 @@ const { StatusCodes: httpStatus } = require("http-status-codes");
 const { CourseModel } = require("../../../../models/courses");
 const createHttpError = require("http-errors");
 const { ObjectValidator } = require("../../../validators/public.validator");
-const episode = require("../../../../router/admin/episode");
 
 class EpisodeController extends Controller {
   async addNewEpisode(req, res, next) {
@@ -114,14 +113,11 @@ class EpisodeController extends Controller {
       const episode = await this.getOneEpisode(episodeID);
       const { filename, fileUploadPath } = req.body;
       let blackListFields = ["_id"];
-
       if (filename && fileUploadPath) {
-        req.body.videoAddress = path
-          .join(fileUploadPath, filename)
-          .replace(/\\/gi, "/");
-
-        req.body.videoUrl = `${process.env.BASE_URL}:${process.env.APPLICATION_PORT}/${req.body.videoAddress}`;
-        const seconds = await getVideoDurationInSeconds(req.body.videoUrl);
+        const fileAddress = path.join(fileUploadPath, filename);
+        req.body.videoAddress = fileAddress.replace(/\\/g, "/");
+        const videoURL = `${process.env.BASE_URL}:${process.env.APPLICATION_PORT}/${req.body.videoAddress}`;
+        const seconds = await getVideoDurationInSeconds(videoURL);
         req.body.time = getTime(seconds);
         blackListFields.push("filename");
         blackListFields.push("fileUploadPath");
@@ -129,12 +125,13 @@ class EpisodeController extends Controller {
         blackListFields.push("time");
         blackListFields.push("videoAddress");
       }
-
       const data = req.body;
       deleteInvalidPropertyObject(data, blackListFields);
-      const newEpisode = { ...episode, ...data };
-
-      const updateEpisodeResult = await CourseModel.updateOne(
+      const newEpisode = {
+        ...episode,
+        ...data,
+      };
+      const editEpisodeResult = await CourseModel.updateOne(
         {
           "chapters.episodes._id": episodeID,
         },
@@ -144,20 +141,16 @@ class EpisodeController extends Controller {
           },
         }
       );
-
-      if (!updateEpisodeResult.modifiedCount)
-        throw createHttpError.InternalServerError(
-          "بروز رسانی قسمت با خطا مواجه شد (خطای سرور)"
-        );
-
+      if (editEpisodeResult.modifiedCount == 0)
+        throw new createHttpError.InternalServerError("ویرایش قسمت انجام نشد");
       return res.status(httpStatus.OK).json({
-        StatusCode: httpStatus.OK,
+        statusCode: httpStatus.OK,
         data: {
-          message: "بروز رسانی قسمت با موفقیت انجام شد",
+          message: "ویرایش قسمت با موفقیت انجام شد",
         },
       });
-    } catch (err) {
-      next(err);
+    } catch (error) {
+      next(error);
     }
   }
 
@@ -167,7 +160,7 @@ class EpisodeController extends Controller {
         "chapters.episodes._id": episodeID,
       },
       {
-        "chapters.$.episodes": 1,
+        "chapters.episodes.$": 1,
       }
     );
 
