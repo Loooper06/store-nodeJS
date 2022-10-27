@@ -29,7 +29,7 @@ router.patch(
 router.delete("/delete/:id", ProductController.removeProduct);
 
 //? desc get all products
-//? GET /admin/products/
+//? GET /admin/products/all
 router.get("/all", ProductController.getAllProducts);
 
 //? desc get a product by blog's ID

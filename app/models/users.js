@@ -1,6 +1,6 @@
 const { default: mongoose } = require("mongoose");
 
-const Schema = new mongoose.Schema(
+const UserSchema = new mongoose.Schema(
   {
     first_name: { type: String },
     last_name: { type: String },
@@ -29,6 +29,14 @@ const Schema = new mongoose.Schema(
   }
 );
 
+UserSchema.index({
+  first_name: "text",
+  last_name: "text",
+  username: "text",
+  mobile: "text",
+  email: "text",
+});
+
 module.exports = {
-  UserModel: mongoose.model("user", Schema),
+  UserModel: mongoose.model("user", UserSchema),
 };
