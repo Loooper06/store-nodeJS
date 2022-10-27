@@ -1,4 +1,5 @@
 const { default: mongoose } = require("mongoose");
+const { getTimeOfCourse } = require("../utils/functions");
 const { CommentSchema } = require("./public.schema");
 
 const Episodes = mongoose.Schema(
@@ -46,7 +47,6 @@ const CourseSchema = new mongoose.Schema(
     price: { type: Number, default: 0 },
     discount: { type: Number, default: 0 },
     type: { type: String, required: true }, //! free - cash - permium
-    time: { type: String, default: "00:00:00" },
     teacher: { type: mongoose.Types.ObjectId, ref: "user", required: true },
     chapters: { type: [Chapter], default: [] },
     students: { type: [mongoose.Types.ObjectId], default: [], ref: "user" },
@@ -62,6 +62,10 @@ CourseSchema.index({ title: "text", text: "text", short_text: "text" });
 
 CourseSchema.virtual("imageURL").get(function () {
   return `${process.env.BASE_URL}:${process.env.APPLICATION_PORT}/${this.image}`;
+});
+
+CourseSchema.virtual("totalTime").get(function () {
+  return getTimeOfCourse(this.chapters || []);
 });
 
 module.exports = {

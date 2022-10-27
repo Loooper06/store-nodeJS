@@ -26,17 +26,17 @@ router.post(
   CourseController.addNewCourse
 ); //! create new course
 
-//? desc Add new Category
-//? POST /admin/category/add
-// router.put(); //! create new episode
-
-//? desc Add new Category
-//? POST /admin/category/add
+//? desc Remove Course
+//? Delete /admin/category/add
 // router.delete(); //! remove course
 
-//? desc Add new Category
-//? POST /admin/category/add
-// router.patch(); //! edit course
+//? desc Update A Category
+//? PATCH /admin/category/update/:courseID
+router.patch(
+  "/update/:courseID",
+  uploadFile.single("image"),
+  CourseController.updateCourse
+); //! edit course
 
 module.exports = {
   CourseAdminApiRoutes: router,

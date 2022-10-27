@@ -31,6 +31,8 @@ class EpisodeController extends Controller {
         .join(fileUploadPath, filename)
         .replace(/\\/gi, "/");
 
+        console.log(videoAddress);
+
       const videoUrl = `${process.env.BASE_URL}:${process.env.APPLICATION_PORT}/${videoAddress}`;
 
       const seconds = await getVideoDurationInSeconds(videoUrl);
@@ -148,7 +150,7 @@ class EpisodeController extends Controller {
 
       if (editEpisodeResult.modifiedCount == 0)
         throw new createHttpError.InternalServerError("ویرایش قسمت انجام نشد");
-        
+
       return res.status(httpStatus.OK).json({
         statusCode: httpStatus.OK,
         data: {

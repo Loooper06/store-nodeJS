@@ -6,7 +6,12 @@ const {
   createCourseSchema,
 } = require("../../../validators/admin/courseSchema");
 const createHttpError = require("http-errors");
-const { deleteFileInPublic } = require("../../../../utils/functions");
+const {
+  deleteFileInPublic,
+  copyObject,
+  deleteInvalidPropertyObject,
+  getTimeOfCourse,
+} = require("../../../../utils/functions");
 const { default: mongoose } = require("mongoose");
 
 class CourseController extends Controller {
@@ -53,6 +58,8 @@ class CourseController extends Controller {
     try {
       const { id } = req.params;
       const course = await this.findCourseByID(id);
+      course.time = getTimeOfCourse(course.chapters);
+
       return res.status(httpStatus.OK).json({
         statusCode: httpStatus.OK,
         data: {
@@ -107,7 +114,6 @@ class CourseController extends Controller {
         discount,
         type,
         image,
-        time: "00:00:00",
         teacher,
       });
 
@@ -124,22 +130,51 @@ class CourseController extends Controller {
     }
   }
 
-  async addNewEpisode(req, res, next) {
-    try {
-    } catch (err) {
-      next(err);
-    }
-  }
-
-  async deleteCourse(req, res, next) {
-    try {
-    } catch (err) {
-      next(err);
-    }
-  }
-
   async updateCourse(req, res, next) {
     try {
+      const { courseID } = req.params;
+      const course = await this.findCourseByID(courseID);
+
+      let blackListField = [
+        "time",
+        "chapters",
+        "episodes",
+        "students",
+        "bookmarks",
+        "likes",
+        "dislikes",
+        "comments",
+        "fileUploadPath",
+        "filename",
+      ];
+
+      const { filename, fileUploadPath } = req.body;
+      const data = copyObject(req.body);
+      deleteInvalidPropertyObject(data, blackListField);
+
+      if (req.file) {
+        data.image = path.join(fileUploadPath, filename).replace(/\\/g, "/");
+        deleteFileInPublic(course.image);
+      }
+
+      const updateCourseResult = await CourseModel.updateOne(
+        { _id: courseID },
+        {
+          $set: data,
+        }
+      );
+
+      if (!updateCourseResult.modifiedCount)
+        throw createHttpError.InternalServerError(
+          "بروز رسانی دوره با خطا مواجه شد (خطای سرور)"
+        );
+
+      return res.status(httpStatus.OK).json({
+        statusCode: httpStatus.OK,
+        data: {
+          message: "بروز رسانی دوره با موفقیت انجام شد",
+        },
+      });
     } catch (err) {
       next(err);
     }

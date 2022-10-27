@@ -148,7 +148,46 @@ function getTime(seconds) {
       .substring(0, 2);
   }
 
+  if (String(hour).length == 1) hour = `0${hour}`;
+  if (String(minutes).length == 1) minutes = `0${minutes}`;
+  if (String(second).length == 1) second = `0${second}`;
+
   return hour + ":" + minutes + ":" + second;
+}
+
+function getTimeOfCourse(chapters = []) {
+  let time,
+    hour,
+    minute,
+    second = 0;
+
+  for (const chapter of chapters) {
+    if (Array.isArray(chapter?.episodes)) {
+      for (const episode of chapter.episodes) {
+        if (episode?.time) time = episode.time.split(":");
+        else time = "00:00:00".split(":");
+
+        if (time.length == 3) {
+          second += Number(time[0]) * 3600; //? Convert Hour to Second
+          second += Number(time[1]) * 60; //? Convert Minute to Second
+          second += Number(time[2]); //? Sum second with seconds
+        } else if (time.length == 2) {
+          second += Number(time[0]) * 60; //? Convert Minute to Second
+          second += Number(time[1]); //? Sum second with seconds
+        }
+      }
+    }
+  }
+
+  hour = Math.floor(second / 3600); //? Convert Second to Hour
+  minute = Math.floor(second / 60) % 60; //? Convert Seconds to Minute
+  second = Math.floor(second % 60); //? Sum Seconds to Second
+
+  if (String(hour).length == 1) hour = `0${hour}`;
+  if (String(minute).length == 1) minute = `0${minute}`;
+  if (String(second).length == 1) second = `0${second}`;
+
+  return hour + ":" + minute + ":" + second;
 }
 
 module.exports = {
@@ -162,4 +201,5 @@ module.exports = {
   setFeatures,
   deleteInvalidPropertyObject,
   getTime,
+  getTimeOfCourse,
 };
