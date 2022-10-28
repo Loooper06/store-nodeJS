@@ -1,12 +1,16 @@
+const {
+  PermissionController,
+} = require("../../http/controllers/admin/RBAC/permissionController");
+
 const router = require("express").Router();
 
 //? desc create new Permission
 //? POST /admin/permissions/add
-// router.post("/add")
+router.post("/add", PermissionController.createNewPermission);
 
 //? desc get Permissions list
 //? GET /admin/permissions/list
-// router.get("/list")
+router.get("/list", PermissionController.getAllPermissions);
 
 //? desc Update A Permission
 //? PATCH /admin/permissions/update/:roleID
@@ -14,7 +18,7 @@ const router = require("express").Router();
 
 //? desc Delete A Permission
 //? POST /admin/permissions/remove/:roleID
-// router.delete("/remove/:roleID")
+router.delete("/remove/:permissionID", PermissionController.removePermission);
 
 module.exports = {
   PermissionAdminApiRoutes: router,
