@@ -32,19 +32,6 @@ function VerifyAccessToken(req, res, next) {
   }
 }
 
-function checkRole(role) {
-  return function (req, res, next) {
-    try {
-      const user = req.user;
-      if (user.Roles.includes(role)) return next();
-      throw createHttpError.Forbidden("شما به این قسمت دسترسی ندارید");
-    } catch (err) {
-      next(err);
-    }
-  };
-}
-
 module.exports = {
   VerifyAccessToken,
-  checkRole,
 };

@@ -14,7 +14,7 @@ router.get("/list", PermissionController.getAllPermissions);
 
 //? desc Update A Permission
 //? PATCH /admin/permissions/update/:roleID
-// router.patch("/update/:roleID")
+router.patch("/update/:permissionID", PermissionController.updatePermission);
 
 //? desc Delete A Permission
 //? POST /admin/permissions/remove/:roleID

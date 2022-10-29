@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema(
     birth_day: { type: String },
     bills: { type: [], default: [] },
     password: { type: String },
-    Roles: { type: [String], default: ["USER"] },
+    Role: { type: String, default: "USER" },
     Courses: { type: [mongoose.Types.ObjectId], default: [], ref: "course" },
     otp: {
       type: Object,

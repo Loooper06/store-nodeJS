@@ -8,7 +8,7 @@ const { default: mongoose } = require("mongoose");
 class RoleController extends Controller {
   async getAllRoles(req, res, next) {
     try {
-      const roles = await RoleModel.find({}).populate([{ path: "permission" }]);
+      const roles = await RoleModel.find({});
 
       return res.status(httpStatus.OK).json({
         statusCode: httpStatus.OK,
@@ -23,12 +23,16 @@ class RoleController extends Controller {
 
   async createNewRole(req, res, next) {
     try {
-      const { title, permissions } = await addRoleSchema.validateAsync(
-        req.body
-      );
+      const { title, permissions, description } =
+        await addRoleSchema.validateAsync(req.body);
       await this.findRoleByTitle(title);
 
-      const createRoleResult = await RoleModel.create({ title, permissions });
+      const createRoleResult = await RoleModel.create({
+        title,
+        permissions,
+        description,
+      });
+
       if (!createRoleResult)
         throw createHttpError.InternalServerError("نقش ایجاد نشد");
 
@@ -58,6 +62,32 @@ class RoleController extends Controller {
         statusCode: httpStatus.OK,
         data: {
           message: "حذف نقش با موفقیت انجام شد",
+        },
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async updateRole(req, res, next) {
+    try {
+      const { roleID } = req.params;
+      const data = await addRoleSchema.validateAsync(req.body);
+      const role = await this.findRole(roleID);
+
+      const updateResult = await RoleModel.updateOne(
+        { _id: role._id },
+        { $set: data }
+      );
+
+      if (!updateResult.modifiedCount)
+        throw createHttpError.InternalServerError(
+          "بروز رسانی نقش با خطا مواجه شد (خطای سرور)"
+        );
+      return res.status(httpStatus.OK).json({
+        statusCode: httpStatus.OK,
+        data: {
+          message: "بروز رسانی نقش با موفقیت انجام شد",
         },
       });
     } catch (err) {

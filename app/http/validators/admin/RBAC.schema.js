@@ -6,7 +6,10 @@ const addRoleSchema = Joi.object({
     .min(3)
     .max(30)
     .error(new Error("عنوان نقش صحیح نمی باشد")),
-
+  description: Joi.string()
+    .min(3)
+    .max(150)
+    .error(new Error("توضیحات نقش صحیح نمی باشد")),
   permissions: Joi.array()
     .items(Joi.string().pattern(MONGO_ID_PATTERN))
     .error(new Error("سطوح دسترسی های ارسال شده صحیح نمی باشد")),

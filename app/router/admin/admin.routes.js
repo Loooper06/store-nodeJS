@@ -1,3 +1,4 @@
+const { checkPermission } = require("../../http/middlewares/permission.guard");
 const { BlogAdminApiRoutes } = require("./blog");
 const { CategoryAdminApiRoutes } = require("./category");
 const { ChapterAdminApiRoutes } = require("./chapter");
@@ -11,7 +12,7 @@ const router = require("express").Router();
 
 router.use("/category", CategoryAdminApiRoutes);
 router.use("/blogs", BlogAdminApiRoutes);
-router.use("/users", UserAdminApiRoutes);
+router.use("/users", checkPermission(["USER"]), UserAdminApiRoutes);
 router.use("/products", ProductAdminApiRoutes);
 router.use("/courses", CourseAdminApiRoutes);
 router.use("/chapters", ChapterAdminApiRoutes);

@@ -15,7 +15,11 @@ router.get("/list", RoleController.getAllRoles);
 
 //? desc Update A Role
 //? PATCH /admin/roles/update/:roleID
-// router.patch("/update/:roleID")
+router.patch(
+  "/update/:roleID",
+  stringToArray("permissions"),
+  RoleController.updateRole
+);
 
 //? desc Delete A Role
 //? POST /admin/roles/remove/:roleID

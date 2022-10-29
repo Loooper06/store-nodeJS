@@ -72,6 +72,33 @@ class PermissionController extends Controller {
     }
   }
 
+  async updatePermission(req, res, next) {
+    try {
+      const { permissionID } = req.params;
+      const data = await addPermissionSchema.validateAsync(req.body);
+      const permission = await this.findPermissionByID(permissionID);
+
+      const updateResult = await PermissionModel.updateOne(
+        { _id: permission._id },
+        { $set: data }
+      );
+
+      if (!updateResult.modifiedCount)
+        throw createHttpError.InternalServerError(
+          "بروز رسانی سطح دسترسی با خطا مواجه شد (خطای سرور)"
+        );
+
+      return res.status(httpStatus.OK).json({
+        statusCode: httpStatus.OK,
+        data: {
+          message: "بروز رسانی سطح دسترسی با موفقیت انجام شد",
+        },
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
   async findPermissionByName(name) {
     const permission = await PermissionModel.findOne({ name });
     if (permission)
