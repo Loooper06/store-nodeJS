@@ -9,7 +9,11 @@ const BlogSchema = new mongoose.Schema(
     short_text: { type: String, required: true },
     image: { type: String, required: true },
     tags: { type: [String], default: [] },
-    category: { type: [mongoose.Types.ObjectId], required: true },
+    category: {
+      type: mongoose.Types.ObjectId,
+      required: true,
+      ref: "category",
+    },
     comments: { type: [CommentSchema], default: [] },
     likes: { type: [mongoose.Types.ObjectId], ref: "users", default: [] },
     desLike: { type: [mongoose.Types.ObjectId], ref: "users", default: [] },

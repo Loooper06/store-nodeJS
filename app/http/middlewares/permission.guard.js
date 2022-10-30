@@ -17,7 +17,7 @@ function checkPermission(requiredPermissions = []) {
         return userPermissions.includes(permission);
       });
 
-      if (userPermissions.includes(PERMISSIONS.ALL)) return next();
+      if (userPermissions.includes(PERMISSIONS.ADMIN[0])) return next();
       if (!allPermissions.length || hasPermission) return next();
       throw createHttpError.Forbidden("شما به این قسمت دسترسی ندارید");
     } catch (err) {

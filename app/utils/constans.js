@@ -9,20 +9,20 @@ module.exports = {
   }),
 
   PERMISSIONS: Object.freeze({
-    USER: ["profile"],
-    ADMIN: ["all"],
-    SUPERADMIN: ["all"],
+    USER: ["PROFILE"],
+    ADMIN: ["ADMIN"],
+    SUPERADMIN: ["ALL"],
     CONTENT_MANGER: [
-      "course",
-      "blog",
-      "category",
-      "product",
-      "episode",
-      "chapter",
+      "COURSE",
+      "BLOG",
+      "CATEGORY",
+      "PRODUCT",
+      "EPISODE",
+      "CHAPTER",
     ],
-    TEACHER: ["course", "blog"],
-    SUPPLIER: ["product"],
-    ALL: "all",
+    TEACHER: ["COURSE", "BLOG"],
+    SUPPLIER: ["PRODUCT"],
+    ALL: "ALL",
   }),
 
   ACCESS_TOKEN_SECRET_KEY:
