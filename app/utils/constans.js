@@ -9,13 +9,19 @@ module.exports = {
   }),
 
   PERMISSIONS: Object.freeze({
-    USER: "user",
-    COURSE: "course",
-    BLOG: "blog",
-    CATEGORY: "category",
-    PRODUCT: "product",
-    EPISODE: "episode",
-    CHAPTER: "chapter",
+    USER: ["profile"],
+    ADMIN: ["all"],
+    SUPERADMIN: ["all"],
+    CONTENT_MANGER: [
+      "course",
+      "blog",
+      "category",
+      "product",
+      "episode",
+      "chapter",
+    ],
+    TEACHER: ["course", "blog"],
+    SUPPLIER: ["product"],
     ALL: "all",
   }),
 

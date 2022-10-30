@@ -59,6 +59,21 @@ class UserController extends Controller {
       next(err);
     }
   }
+
+  async userProfile(req, res, next) {
+    try {
+      const user = req.user;
+
+      return res.status(httpStatus.OK).json({
+        StatusCode: httpStatus.OK,
+        data: {
+          user,
+        },
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = {
