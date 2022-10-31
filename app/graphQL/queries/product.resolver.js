@@ -4,8 +4,11 @@ const { productType } = require("../typeDefs/product.type");
 
 const ProductResolver = {
   type: new GraphQLList(productType),
-  resolve: () => {
-    return ProductModel.find({}).populate([{path : "category"} , {path : "supplier"}]);
+  resolve: async () => {
+    return await ProductModel.find({}).populate([
+      { path: "category" },
+      { path: "supplier" },
+    ]);
   },
 };
 
