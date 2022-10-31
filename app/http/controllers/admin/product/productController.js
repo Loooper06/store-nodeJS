@@ -156,9 +156,9 @@ class ProductController extends Controller {
           $text: {
             $search: search,
           },
-        });
+        }).populate([{ path: "category" }]);
       } else {
-        products = await ProductModel.find({});
+        products = await ProductModel.find({}).populate([{ path: "category" }]);
       }
 
       products.map((pr) => {

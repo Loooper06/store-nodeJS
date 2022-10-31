@@ -1,4 +1,4 @@
-const { GraphQLString, GraphQLObjectType } = require("graphql");
+const { GraphQLString, GraphQLObjectType, GraphQLList } = require("graphql");
 
 const AuthorType = new GraphQLObjectType({
   name: "AuthorType",
@@ -17,7 +17,22 @@ const CategoryType = new GraphQLObjectType({
   },
 });
 
+const FeaturesType = new GraphQLObjectType({
+  name: "FeaturesType",
+  fields: {
+    length: { type: GraphQLString },
+    height: { type: GraphQLString },
+    width: { type: GraphQLString },
+    width: { type: GraphQLString },
+    weight: { type: GraphQLString },
+    colors: { type: new GraphQLList(GraphQLString) },
+    models: { type: new GraphQLList(GraphQLString) },
+    madein: { type: GraphQLString },
+  },
+});
+
 module.exports = {
   AuthorType,
+  FeaturesType,
   CategoryType,
 };

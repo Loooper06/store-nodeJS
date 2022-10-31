@@ -40,6 +40,12 @@ const productSchema = new mongoose.Schema(
 
 productSchema.index({ title: "text", short_text: "text", text: "text" });
 
+productSchema.virtual("category_detail", {
+  ref: "category",
+  localField: "_id",
+  foreignField: "category",
+});
+
 productSchema.virtual("imagesURL").get(function () {
   return this.images.map(
     (image) =>
