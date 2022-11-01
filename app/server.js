@@ -93,8 +93,8 @@ module.exports = class Application {
 
     this.#app.use((err, req, res, next) => {
       const serverError = createError.InternalServerError();
-      const statusCode = err.status || serverError.status;
-      const message = err.message || serverError.message;
+      const statusCode = err?.status || serverError.status;
+      const message = err?.message || serverError.message;
 
       return res.status(statusCode).json({
         errors: {

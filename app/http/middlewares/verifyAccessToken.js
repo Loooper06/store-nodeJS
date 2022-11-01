@@ -32,6 +32,30 @@ function VerifyAccessToken(req, res, next) {
   }
 }
 
+async function VerifyAccessTokenInGraphQL(req, res) {
+  try {
+    const token = getToken(req.headers);
+    try {
+      const decodedToken = jwt.verify(token, ACCESS_TOKEN_SECRET_KEY);
+
+      if (!decodedToken) {
+        throw createHttpError.Unauthorized("ابتدا وارد حساب کاربری خود شوید");
+      }
+
+      const { mobile } = decodedToken || {};
+      const user = await UserModel.findOne({ mobile }, { password: 0, otp: 0 });
+
+      if (!user) throw createHttpError.NotFound("حساب کاربری یافت نشد");
+      req.user = user;
+    } catch (err) {
+      throw createHttpError.Unauthorized(err.message);
+    }
+  } catch (err) {
+    throw createHttpError.Unauthorized(err.message);
+  }
+}
+
 module.exports = {
   VerifyAccessToken,
+  VerifyAccessTokenInGraphQL,
 };
