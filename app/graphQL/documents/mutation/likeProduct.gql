@@ -1,0 +1,6 @@
+mutation {
+  LikeProduct(productID: "63597eb8877eea5fab7e7244") {
+    statusCode
+    data
+  }
+}

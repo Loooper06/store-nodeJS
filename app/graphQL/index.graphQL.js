@@ -6,7 +6,21 @@ const {
 } = require("./queries/category.resolver");
 const { CourseResolver } = require("./queries/course.resolver");
 const { ProductResolver } = require("./queries/product.resolver");
-const { CreateCommentForBlog } = require("./queries/comment.resolver");
+const {
+  CreateCommentForBlog,
+  CreateCommentForCourse,
+  CreateCommentForProduct,
+} = require("./mutation/comment.resolver");
+const {
+  LikeProduct,
+  LikeBlog,
+  LikeCourse,
+} = require("./mutation/likes.resolver");
+const {
+  DisLikeProduct,
+  DisLikeBlog,
+  DisLikeCourse,
+} = require("./mutation/dislikes.resolver");
 
 //? query , mutation , schema , types
 
@@ -25,6 +39,14 @@ const RootMutaion = new GraphQLObjectType({
   name: "RootMutation",
   fields: {
     CreateCommentForBlog,
+    CreateCommentForCourse,
+    CreateCommentForProduct,
+    LikeProduct,
+    LikeBlog,
+    LikeCourse,
+    DisLikeProduct,
+    DisLikeBlog,
+    DisLikeCourse,
   },
 });
 

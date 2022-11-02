@@ -1,11 +1,12 @@
-const { GraphQLObjectType, GraphQLString, GraphQLBoolean } = require("graphql");
+const { GraphQLObjectType, GraphQLString, GraphQLBoolean, GraphQLList } = require("graphql");
 const { UserType } = require("./public.types");
 
-const ParentOfCommentType = new GraphQLObjectType({
-  name: "ParentOfCommentType",
+const CommentAnswerType = new GraphQLObjectType({
+  name: "CommentAnswerType",
   fields: {
     user: { type: UserType },
     comment: { type: GraphQLString },
+    show: { type: GraphQLBoolean },
   },
 });
 
@@ -14,9 +15,10 @@ const CommentType = new GraphQLObjectType({
   fields: {
     user: { type: UserType },
     comment: { type: GraphQLString },
-    parent: { type: ParentOfCommentType },
+    answers: { type: new GraphQLList(CommentAnswerType) },
     show: { type: GraphQLBoolean },
     openToComment: { type: GraphQLBoolean },
+    createdAt: { type: GraphQLString },
   },
 });
 

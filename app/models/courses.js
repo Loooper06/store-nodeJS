@@ -40,9 +40,9 @@ const CourseSchema = new mongoose.Schema(
       required: true,
     },
     comments: { type: [CommentSchema], default: [] },
-    likes: { type: [mongoose.Types.ObjectId], default: [] },
-    dislikes: { type: [mongoose.Types.ObjectId], default: [] },
-    bookmarks: { type: [mongoose.Types.ObjectId], default: [] },
+    likes: { type: [mongoose.Types.ObjectId], ref: "user", default: [] },
+    dislikes: { type: [mongoose.Types.ObjectId], ref: "user", default: [] },
+    bookmarks: { type: [mongoose.Types.ObjectId], ref: "user", default: [] },
     status: { type: String, default: "notStarted" }, //! notStarted - Completed - Holding
     price: { type: Number, default: 0 },
     discount: { type: Number, default: 0 },
