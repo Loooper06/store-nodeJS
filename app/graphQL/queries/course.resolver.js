@@ -11,8 +11,8 @@ const CourseResolver = {
     category: { type: GraphQLString },
   },
   resolve: async (_, args, context) => {
-    const { req, res } = context;
-    await VerifyAccessTokenInGraphQL(req, res);
+    const { req } = context;
+    await VerifyAccessTokenInGraphQL(req);
     const { category } = args;
     const findQuery = category ? { category } : {};
     return await CourseModel.find(findQuery).populate([

@@ -1,0 +1,9 @@
+mutation {
+  CreateCommentForBlog(
+    comment: "salam azizam"
+    blogID: "63621e82fe7cb775f71b0542"
+  ) {
+    statusCode
+    data
+  }
+}

@@ -32,7 +32,7 @@ function VerifyAccessToken(req, res, next) {
   }
 }
 
-async function VerifyAccessTokenInGraphQL(req, res) {
+async function VerifyAccessTokenInGraphQL(req) {
   try {
     const token = getToken(req.headers);
     try {
@@ -46,7 +46,7 @@ async function VerifyAccessTokenInGraphQL(req, res) {
       const user = await UserModel.findOne({ mobile }, { password: 0, otp: 0 });
 
       if (!user) throw createHttpError.NotFound("حساب کاربری یافت نشد");
-      req.user = user;
+      return user;
     } catch (err) {
       throw createHttpError.Unauthorized(err.message);
     }

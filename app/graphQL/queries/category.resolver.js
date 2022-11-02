@@ -8,8 +8,8 @@ const { CategoryType } = require("../typeDefs/category.type");
 const CategoryResolver = {
   type: new GraphQLList(CategoryType),
   resolve: async (_, args, context) => {
-    const { req, res } = context;
-    await VerifyAccessTokenInGraphQL(req, res);
+    const { req } = context;
+    await VerifyAccessTokenInGraphQL(req);
     const categories = await CategoryModel.find({ parent: undefined });
     return categories;
   },
@@ -22,8 +22,8 @@ const CategoryChildResolver = {
   },
   resolve: async (_, args, context) => {
     const { parent } = args;
-    const { req, res } = context;
-    await VerifyAccessTokenInGraphQL(req, res);
+    const { req } = context;
+    await VerifyAccessTokenInGraphQL(req);
     const categories = await CategoryModel.find({ parent });
     return categories;
   },
