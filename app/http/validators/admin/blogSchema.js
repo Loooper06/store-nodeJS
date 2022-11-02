@@ -13,6 +13,7 @@ const createBlogSchema = Joi.object({
   short_text: Joi.string().error(
     createHttpError.BadRequest("متن ارسال شده صحیح نمی باشد")
   ),
+  image: Joi.allow(),
   filename: Joi.string()
     .pattern(/(\.png|\.jpg|\.webp|\.jpeg|\.gif)$/)
     .error(createHttpError.BadRequest("تصویر ارسال شده صحیح نمی باشد")),

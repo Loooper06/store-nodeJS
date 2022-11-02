@@ -1,4 +1,4 @@
-const { GraphQLList } = require("graphql");
+const { GraphQLList, GraphQLString } = require("graphql");
 const {
   VerifyAccessTokenInGraphQL,
 } = require("../../http/middlewares/verifyAccessToken");
@@ -7,10 +7,15 @@ const { productType } = require("../typeDefs/product.type");
 
 const ProductResolver = {
   type: new GraphQLList(productType),
+  args: {
+    category: { type: GraphQLString },
+  },
   resolve: async (_, args, context) => {
     const { req, res } = context;
     await VerifyAccessTokenInGraphQL(req, res);
-    return await ProductModel.find({}).populate([
+    const { category } = args;
+    const findQuery = category ? { category } : {};
+    return await ProductModel.find(findQuery).populate([
       { path: "category" },
       { path: "supplier" },
     ]);

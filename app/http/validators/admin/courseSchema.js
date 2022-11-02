@@ -13,6 +13,7 @@ const createCourseSchema = Joi.object({
   short_text: Joi.string().error(
     createHttpError.BadRequest("متن کوتاه ارسال شده صحیح نمی باشد")
   ),
+  image: Joi.allow(),
   tags: Joi.array()
     .min(0)
     .max(20)

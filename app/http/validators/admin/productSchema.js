@@ -13,6 +13,7 @@ const createProductSchema = Joi.object({
   short_text: Joi.string().error(
     createHttpError.BadRequest("متن ارسال شده صحیح نمی باشد")
   ),
+  images: Joi.allow(),
   tags: Joi.array()
     .min(0)
     .max(20)

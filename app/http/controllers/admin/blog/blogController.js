@@ -31,7 +31,7 @@ class BlogController extends Controller {
       const { title, text, short_text, category, tags } = blogDataBody;
       const image = req.body.image;
       const author = req.user._id;
-      const blog = await BlogModel.create({
+      await BlogModel.create({
         title,
         image,
         text,
