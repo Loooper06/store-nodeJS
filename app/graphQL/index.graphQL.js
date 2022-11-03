@@ -31,6 +31,12 @@ const {
   getUserBookmarkedCourses,
   getUserBookmarkedProducts,
 } = require("./queries/user-profile.resolver");
+const {
+  AddCourseToBasket,
+  AddProductToBasket,
+  RemoveCourseToBasket,
+  RemoveProductToBasket,
+} = require("./mutation/basket.resolver");
 
 //? query , mutation , schema , types
 
@@ -63,6 +69,10 @@ const RootMutaion = new GraphQLObjectType({
     BookmarkBlog,
     BookmarkCourse,
     BookmarkProduct,
+    AddCourseToBasket,
+    AddProductToBasket,
+    RemoveCourseToBasket,
+    RemoveProductToBasket,
   },
 });
 

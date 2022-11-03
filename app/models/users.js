@@ -1,5 +1,20 @@
 const { default: mongoose } = require("mongoose");
 
+const ProductSchema = new mongoose.Schema({
+  productID: { type: mongoose.Types.ObjectId, ref: "product" },
+  count: { type: Number, default: 1 },
+});
+
+const CourseSchema = new mongoose.Schema({
+  courseID: { type: mongoose.Types.ObjectId, ref: "course" },
+  count: { type: Number, default: 1 },
+});
+
+const BasketShema = new mongoose.Schema({
+  courses: { type: [CourseSchema], default: [] },
+  products: { type: [ProductSchema], default: [] },
+});
+
 const UserSchema = new mongoose.Schema(
   {
     first_name: { type: String },
@@ -13,6 +28,7 @@ const UserSchema = new mongoose.Schema(
     password: { type: String },
     Role: { type: String, default: "USER" },
     Courses: { type: [mongoose.Types.ObjectId], default: [], ref: "course" },
+    basket: { type: BasketShema },
     otp: {
       type: Object,
       default: {
