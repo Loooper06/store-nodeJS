@@ -1,0 +1,20 @@
+mutation {
+  LikeBlog(blogID: "63621e82fe7cb775f71b0542") {
+    statusCode
+    data
+  }
+}
+
+mutation {
+  LikeCourse(courseID: "6357a8dbf4ed4604dc1bd18a") {
+    statusCode
+    data
+  }
+}
+
+mutation {
+  LikeProduct(productID: "63597eb8877eea5fab7e7244") {
+    statusCode
+    data
+  }
+}

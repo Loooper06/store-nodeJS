@@ -21,6 +21,16 @@ const {
   DisLikeBlog,
   DisLikeCourse,
 } = require("./mutation/dislikes.resolver");
+const {
+  BookmarkBlog,
+  BookmarkCourse,
+  BookmarkProduct,
+} = require("./mutation/bookmark.resolver");
+const {
+  getUserBookmarkedBlogs,
+  getUserBookmarkedCourses,
+  getUserBookmarkedProducts,
+} = require("./queries/user-profile.resolver");
 
 //? query , mutation , schema , types
 
@@ -32,6 +42,9 @@ const RootQuery = new GraphQLObjectType({
     products: ProductResolver,
     childOfCategory: CategoryChildResolver,
     courses: CourseResolver,
+    getUserBookmarkedBlogs,
+    getUserBookmarkedCourses,
+    getUserBookmarkedProducts,
   },
 });
 
@@ -47,6 +60,9 @@ const RootMutaion = new GraphQLObjectType({
     DisLikeProduct,
     DisLikeBlog,
     DisLikeCourse,
+    BookmarkBlog,
+    BookmarkCourse,
+    BookmarkProduct,
   },
 });
 
