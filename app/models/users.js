@@ -28,6 +28,7 @@ const UserSchema = new mongoose.Schema(
     password: { type: String },
     Role: { type: String, default: "USER" },
     Courses: { type: [mongoose.Types.ObjectId], default: [], ref: "course" },
+    Products: { type: [mongoose.Types.ObjectId], default: [], ref: "product" },
     basket: { type: BasketShema },
     otp: {
       type: Object,

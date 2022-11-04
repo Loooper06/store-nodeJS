@@ -59,6 +59,12 @@ const AddCourseToBasket = {
     const user = await VerifyAccessTokenInGraphQL(req);
     const { courseID } = args;
     await checkExistCourse(courseID);
+    const userCourse = await UserModel.findOne({
+      _id: user._id,
+      Courses: courseID,
+    });
+    if (userCourse)
+      throw createHttpError.BadRequest("دوره قبلا خریداری شده است");
     const course = await findCourseInBasket(user._id, courseID);
     if (course) {
       return {
