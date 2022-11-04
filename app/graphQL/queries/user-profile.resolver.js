@@ -8,6 +8,8 @@ const { ProductModel } = require("../../models/products");
 const { BlogType } = require("../typeDefs/blog.type");
 const { CourseType } = require("../typeDefs/course.type");
 const { productType } = require("../typeDefs/product.type");
+const { AnyType } = require("../typeDefs/public.types");
+const { getBasketOfUser } = require("../../utils/functions");
 
 const getUserBookmarkedBlogs = {
   type: new GraphQLList(BlogType),
@@ -63,8 +65,19 @@ const getUserBookmarkedProducts = {
   },
 };
 
+const getUserBasket = {
+  type: AnyType,
+  resolve: async (_, args, context) => {
+    const { req } = context;
+    const user = await VerifyAccessTokenInGraphQL(req);
+    const userDetail = await getBasketOfUser(user._id);
+    return userDetail;
+  },
+};
+
 module.exports = {
   getUserBookmarkedBlogs,
   getUserBookmarkedCourses,
   getUserBookmarkedProducts,
+  getUserBasket,
 };

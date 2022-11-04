@@ -30,6 +30,7 @@ const {
   getUserBookmarkedBlogs,
   getUserBookmarkedCourses,
   getUserBookmarkedProducts,
+  getUserBasket,
 } = require("./queries/user-profile.resolver");
 const {
   AddCourseToBasket,
@@ -51,6 +52,7 @@ const RootQuery = new GraphQLObjectType({
     getUserBookmarkedBlogs,
     getUserBookmarkedCourses,
     getUserBookmarkedProducts,
+    getUserBasket,
   },
 });
 
@@ -69,10 +71,10 @@ const RootMutaion = new GraphQLObjectType({
     BookmarkBlog,
     BookmarkCourse,
     BookmarkProduct,
-    AddCourseToBasket,
     AddProductToBasket,
-    RemoveCourseToBasket,
     RemoveProductToBasket,
+    AddCourseToBasket,
+    RemoveCourseToBasket,
   },
 });
 
